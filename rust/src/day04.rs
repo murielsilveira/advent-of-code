@@ -3,7 +3,7 @@ use std::fs;
 pub fn solve() {
     let content = fs::read_to_string("../_inputs/day04.txt").unwrap();
 
-    let overlaps = content
+    let pairs = content
         .trim()
         .lines()
         .map(|line| {
@@ -22,6 +22,13 @@ pub fn solve() {
             let first = pairs[0];
             let second = pairs[1];
 
+            (first, second)
+        })
+        .collect::<Vec<_>>();
+
+    let includes = pairs
+        .iter()
+        .map(|(first, second)| {
             let first_includes_second = first.0 <= second.0 && first.1 >= second.1;
             let second_includes_first = second.0 <= first.0 && second.1 >= first.1;
 
@@ -29,5 +36,15 @@ pub fn solve() {
         })
         .sum::<usize>();
 
-    println!("[day04.p1] overlaps: {:?}", overlaps);
+    let overlaps = pairs
+        .iter()
+        .map(|(first, second)| {
+            let overlaps = first.0 <= second.1 && second.0 <= first.1;
+
+            usize::from(overlaps)
+        })
+        .sum::<usize>();
+
+    println!("[day04.p1] includes: {:?}", includes);
+    println!("[day04.p2] overlaps: {:?}", overlaps);
 }
